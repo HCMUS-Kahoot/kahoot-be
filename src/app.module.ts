@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { LoggerMiddleware } from './utils/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
-import { GroupsModule } from './groups/groups.module';
+import { GroupsModule } from './modules/groups/groups.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
