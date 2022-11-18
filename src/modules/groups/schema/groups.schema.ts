@@ -1,4 +1,4 @@
-import { Base, BaseDocument } from './../../base/base.schema';
+import { Base, BaseDocument } from '../../../base/base.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type GroupDocument = Group & BaseDocument;
