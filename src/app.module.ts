@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { LoggerMiddleware } from './utils/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GroupsModule } from './modules/groups/groups.module';
+import { AuthModule } from './modules/authentication/authentication.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { GroupsModule } from './modules/groups/groups.module';
       }),
     }),
     GroupsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
