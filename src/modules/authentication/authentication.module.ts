@@ -8,14 +8,14 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt'
-
+import { JWT_SECRET_KEY } from '../../constant/index';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Auth', schema: AuthSchema }]),
     UserModule,
     PassportModule,
     JwtModule.register({
-      secret: "ThisSecretkey",
+      secret: JWT_SECRET_KEY,
       signOptions:{expiresIn: '300s'}
     }),
   ],
