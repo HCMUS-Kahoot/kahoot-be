@@ -9,18 +9,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt'
 import { JWT_SECRET_KEY } from '../../constant/index';
+import { JwtRefreshStrategy } from './strategies/jwt/jwt-refresh.strategy';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Auth', schema: AuthSchema }]),
     UserModule,
     PassportModule,
-    JwtModule.register({
-      secret: JWT_SECRET_KEY,
-      signOptions:{expiresIn: '300s'}
-    }),
+    JwtModule.register({}),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
   exports: [AuthService]
 })
 export class AuthModule {}
