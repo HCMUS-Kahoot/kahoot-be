@@ -1,5 +1,5 @@
 import { Logger, Injectable, BadGatewayException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, QueryOptions } from 'mongoose';
 import { BaseDocument } from './base.schema';
 @Injectable()
 export class BaseRepository<T extends BaseDocument> {
@@ -40,9 +40,9 @@ export class BaseRepository<T extends BaseDocument> {
     }
   }
 
-  async findAll(): Promise<T[]> {
+  async findAll(filter?: FilterQuery<T>, options?: QueryOptions): Promise<T[]> {
     try {
-      return await this.container.find();
+      return await this.container.find(filter, null, options);
     } catch (error) {
       this.logger.error(error);
       throw new BadGatewayException(error.message);
