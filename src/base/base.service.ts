@@ -1,3 +1,4 @@
+import { BaseUpdateDto } from './dto/base-update.dto';
 import { BaseCreateDto } from './dto/base-create.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseDocument } from './base.schema';
@@ -8,11 +9,11 @@ import { IBaseService } from './IBase.service';
 export class BaseService<T extends BaseDocument> implements IBaseService<T> {
   constructor(private readonly genericRepository: BaseRepository<T>) {}
 
-  async create(model: BaseCreateDto): Promise<T> {
+  async create(model): Promise<T> {
     return this.genericRepository.create(model);
   }
 
-  async updateOne(id: string, model: T): Promise<T> {
+  async updateOne(id: string, model): Promise<T> {
     return this.genericRepository.updateOne(id, model);
   }
 

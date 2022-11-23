@@ -1,4 +1,4 @@
-import { MONGO_CONNECTION_STRING } from './constant/index';
+import { MONGO_CONNECTION_STRING } from './constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { LoggerMiddleware } from './utils/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GroupsModule } from './modules/groups/groups.module';
+import { GroupMembersModule } from './modules/group-members/group-members.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { GroupsModule } from './modules/groups/groups.module';
       }),
     }),
     GroupsModule,
+    GroupMembersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
