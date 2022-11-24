@@ -8,6 +8,7 @@ import { LoggerMiddleware } from './utils/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GroupsModule } from './modules/groups/groups.module';
 import { GroupMembersModule } from './modules/group-members/group-members.module';
+import { ProfilesModule } from './modules/profiles/profiles.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +25,7 @@ import { GroupMembersModule } from './modules/group-members/group-members.module
     }),
     GroupsModule,
     GroupMembersModule,
+    ProfilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
