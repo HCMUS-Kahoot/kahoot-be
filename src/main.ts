@@ -15,6 +15,7 @@ async function bootstrap() {
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    exposedHeaders: ['refresh-token', 'access-token'],
   });
   const configService = app.get(ConfigService);
   const port = configService.get<number>(PORT);
