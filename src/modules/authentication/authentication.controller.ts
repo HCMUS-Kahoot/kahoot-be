@@ -42,10 +42,19 @@ export class AuthController {
   }
   
   @UseGuards(JwtRefreshAuthGuard)
-  @Post('local/refresh')
+  @Post('refresh')
   async refreshAccessToken(@Response() res: any, @Request() req: any): Promise<any>
   {
-    const refreshToken=this.authservice.getTokenFromRequestHeader(req)
+    const refreshToken=this.authservice.getTokenFromRequestHeader(req);
+    const payload = this.authservice.tokenToPayload(refreshToken);
+    const refreshResult = await this.authservice.refreshAccessToken(refreshToken, payload.sub)
+    if(refreshResult)
+    {
+      res.set({
+        'access-token': refreshResult.accessToken,
+      })
+      return res.status(200).send();
+    }
     return res.status(500).send("Can not register new user")
   }
 }

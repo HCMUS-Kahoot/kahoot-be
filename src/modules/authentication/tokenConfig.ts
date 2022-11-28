@@ -1,5 +1,5 @@
 import { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY } from './../../constant/index';
-const accessTokenExpiredTime = 60 * 60 * 2;
+const accessTokenExpiredTime = 5;
 const refreshTokenExpiredTime = 60 * 60 * 24 * 30;
 
 const accessTokenSignConfig = {

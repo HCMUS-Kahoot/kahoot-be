@@ -35,4 +35,18 @@ export class UsersService extends BaseService<UserDocument> {
       throw Error("validateUserPassword FAILED: The userModel fail to validate user with given email!");
     }
   }
+  async updateUserRefreshToken(userId: string, refreshToken: string): Promise<any>{
+    if(!userId||!refreshToken)
+    {
+      throw Error("updateUserRefreshToken FAILED: Can not read userId or refreshToken value which is required field!");
+    }
+    try{
+      return await this.usersRepository.updateRefreshTokenByUserId(userId,refreshToken)
+    }catch(error){
+      throw Error("updateUserRefreshToken FAILED: The userModel fail to update user's refreshToken with given userId!");
+    }
+  }
+  async getUserIdByEmail(email:  string): Promise<any>{
+    return await this.usersRepository.getUserIdByEmail(email);
+  }
 }

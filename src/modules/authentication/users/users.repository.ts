@@ -31,4 +31,19 @@ export class UsersRepository extends BaseRepository<UserDocument> {
       throw new Error(error)
     }
   }
+  async getUserIdByEmail(email: String): Promise<any>{
+    return (await this.userModel.findOne({email}))._id
+  }
+  async updateRefreshTokenByUserId(userId: String, refreshToken: String): Promise<any>{
+    try{
+      const user = await this.userModel.findById(userId);
+      if(!user)
+      {
+        throw new BadRequestException("The user with given id does not exist");
+      }
+      return await this.userModel.findByIdAndUpdate(userId, {refreshToken});
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
 }

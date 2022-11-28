@@ -17,7 +17,14 @@ export class AuthService {
     const result = await this.usersService.validateUserPassword(user.email, user.password);
     if(result)
     {
-      const payload={email: user.email, sub: user.id}
+      const userId= await this.usersService.getUserIdByEmail(user.email);
+      const payload={email: user.email, sub: userId}
+      const refreshToken=(await this.usersService.getItemById(userId)).refreshToken;
+      const expired=this.tokenToPayload(refreshToken).exp
+      if (Date.now() >= parseInt(expired) * 1000) {
+        const newRefreshToken=this.jwtService.sign(payload, refreshTokenSignConfig);
+        await this.usersService.updateUserRefreshToken(userId,newRefreshToken);
+      }
       return {
         access_token: this.jwtService.sign(payload, accessTokenSignConfig),
         refresh_token: (await this.usersService.getUserByEmail(user.email)).refreshToken,
@@ -36,13 +43,15 @@ export class AuthService {
       throw new BadRequestException('The password and confirm password is not the same');
     }
     const hash = await bcrypt.hash(user.password, 12);
-    const payload={email: user.email, sub: user.id}
-    const newRefreshToken = this.jwtService.sign(payload, refreshTokenSignConfig);
     const createUser= await this.usersService.create({
       email: user.email,
       password: hash,
-      refreshToken: newRefreshToken,
+      refreshToken: "",
     })
+    const userId = await this.usersService.getUserIdByEmail(user.email);
+    const payload={email: user.email, sub: userId}
+    const newRefreshToken = this.jwtService.sign(payload, refreshTokenSignConfig);
+    await this.usersService.updateUserRefreshToken(userId,newRefreshToken)
     if(createUser)
     {
       return {
@@ -68,10 +77,13 @@ export class AuthService {
     }
     return null;
   }
-  getTokenFromRequestHeader(request: any): String{
+  getTokenFromRequestHeader(request: any): string{
     const requestAuthorization=request.headers.authorization;
     const beforeExtractToken=requestAuthorization.split(" ");
     const token=beforeExtractToken[1]
     return token
+  }
+  tokenToPayload(token: string): any{
+    return this.jwtService.decode(token)
   }
 }
