@@ -1,9 +1,9 @@
 import { User, UserDocument } from './schema/users.schema';
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { BaseRepository } from '../../../base/base.repository';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersRepository extends BaseRepository<UserDocument> {
   constructor(
@@ -20,7 +20,13 @@ export class UsersRepository extends BaseRepository<UserDocument> {
   }
   async validateUserByEmailAndPassword(email:String, password: String): Promise<any>{
     try {
-      return await this.userModel.findOne({email: email, password: password},{ email: 0, password: 0 });
+      const user = await this.userModel.findOne({email: email});
+      if(!user)
+      {
+        throw new BadRequestException("The user with given email does not exist");
+      }
+      const result = await bcrypt.compare(password, user.password);
+      return result;
     } catch (error) {
       throw new Error(error)
     }

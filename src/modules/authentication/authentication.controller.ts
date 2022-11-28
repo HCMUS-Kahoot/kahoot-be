@@ -1,5 +1,5 @@
-import { JwtAuthGuard } from './strategies/jwt/jwt-auth.guard';
-import { LocalAuthGuard } from './strategies/local/local-auth.guard';
+import { JwtRefreshAuthGuard } from '../../common/guards/jwt-refresh-auth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { Controller, Post, UseGuards, Request, Response, Get, Body } from '@nestjs/common';
 import { AuthService } from './authentication.service';
 
@@ -12,31 +12,40 @@ export class AuthController {
   getHello(@Request() req): any{
     return 'jwt passed !'
   }
-  @UseGuards(LocalAuthGuard)
+
   @Post('local/signin')
-  async login(@Request() req, @Response() res): Promise<any>{
-    const successLoginUser = await this.authservice.login(req.user);
+  async login(@Body() userInfo, @Response() res): Promise<any>{
+    const successLoginUser = await this.authservice.login(userInfo);
     if(successLoginUser)
     {
       res.set({
         'access-token': successLoginUser.access_token,
         'refresh-token': successLoginUser.refresh_token
       })
-      return res.status(200).send(successLoginUser.userInfo);
+      return res.status(200).send();
     }
     return res.status(500).send("Can not register new user")
   }
+
   @Post('local/signup')
   async signupLocal(@Body() userInfo: any, @Response() res: any): Promise<any>{
     const registedNewUser= await this.authservice.register(userInfo);
     if(registedNewUser)
     {
       res.set({
-        'access-token': registedNewUser.accessToken,
-        'refresh-token' : registedNewUser.refreshToken,
+        'access-token': registedNewUser.access_token,
+        'refresh-token' : registedNewUser.refresh_token,
       })
-      return res.status(200).send(registedNewUser.userInfo);
+      return res.status(200).send();
     }
+    return res.status(500).send("Can not register new user")
+  }
+  
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('local/refresh')
+  async refreshAccessToken(@Response() res: any, @Request() req: any): Promise<any>
+  {
+    const refreshToken=this.authservice.getTokenFromRequestHeader(req)
     return res.status(500).send("Can not register new user")
   }
 }

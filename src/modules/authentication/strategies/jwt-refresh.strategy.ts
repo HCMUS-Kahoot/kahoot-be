@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from "@nestjs/passport";
 import { Injectable } from '@nestjs/common';
-import { JWT_REFRESH_SECRET_KEY } from '../../../../constant/index';
+import { JWT_REFRESH_SECRET_KEY } from '../../../constant/index';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh')
