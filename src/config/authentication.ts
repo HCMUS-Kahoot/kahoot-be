@@ -1,6 +1,9 @@
-import { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY } from '../constant';
+import { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, CALLBACK_URL } from '../constant';
 
 export default () => ({
   [JWT_SECRET_KEY]: process.env[JWT_SECRET_KEY],
   [JWT_REFRESH_SECRET_KEY]: process.env[JWT_REFRESH_SECRET_KEY],
+  [GOOGLE_CLIENT_ID]: process.env[GOOGLE_CLIENT_ID],
+  [GOOGLE_CLIENT_SECRET]: process.env[GOOGLE_CLIENT_SECRET],
+  [CALLBACK_URL]: process.env[CALLBACK_URL]
 });
