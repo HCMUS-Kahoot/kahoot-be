@@ -11,39 +11,45 @@ export class UsersRepository extends BaseRepository<UserDocument> {
   ) {
     super(userModel);
   }
-  async findUserByEmail(email: String): Promise<any>{
+  async findUserByEmail(email: String): Promise<any> {
     try {
-      return await this.userModel.findOne({email: email});
+      return await this.userModel.findOne({ email: email });
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
-  async validateUserByEmailAndPassword(email:String, password: String): Promise<any>{
+  async validateUserByEmailAndPassword(
+    email: String,
+    password: String,
+  ): Promise<any> {
     try {
-      const user = await this.userModel.findOne({email: email});
-      if(!user)
-      {
-        throw new BadRequestException("The user with given email does not exist");
+      const user = await this.userModel.findOne({ email: email });
+      if (!user) {
+        throw new BadRequestException(
+          'The user with given email does not exist',
+        );
       }
       const result = await bcrypt.compare(password, user.password);
       return result;
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
-  async getUserIdByEmail(email: String): Promise<any>{
-    return (await this.userModel.findOne({email}))._id
+  async getUserIdByEmail(email: String): Promise<any> {
+    return (await this.userModel.findOne({ email }))._id;
   }
-  async updateRefreshTokenByUserId(userId: String, refreshToken: String): Promise<any>{
-    try{
+  async updateRefreshTokenByUserId(
+    userId: String,
+    refreshToken: String,
+  ): Promise<any> {
+    try {
       const user = await this.userModel.findById(userId);
-      if(!user)
-      {
-        throw new BadRequestException("The user with given id does not exist");
+      if (!user) {
+        throw new BadRequestException('The user with given id does not exist');
       }
-      return await this.userModel.findByIdAndUpdate(userId, {refreshToken});
+      return await this.userModel.findByIdAndUpdate(userId, { refreshToken });
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
 }

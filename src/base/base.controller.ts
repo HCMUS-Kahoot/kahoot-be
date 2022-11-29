@@ -1,3 +1,5 @@
+import { BaseUpdateDto } from './dto/base-update.dto';
+import { BaseCreateDto } from './dto/base-create.dto';
 import { BaseDocument } from './base.schema';
 import {
   Get,
@@ -8,11 +10,17 @@ import {
   Param,
   Controller,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { IBaseService } from './IBase.service';
+import { IBaseController } from './ibase.controller';
 
 @Controller()
-export class BaseController<T extends BaseDocument> {
+export class BaseController<
+  T extends BaseDocument,
+  BaseCreateDto,
+  BaseUpdateDto,
+> implements IBaseController<T, BaseCreateDto, BaseUpdateDto>
+{
   constructor(private readonly iBaseService: IBaseService<T>) {}
 
   @Get()
@@ -29,13 +37,14 @@ export class BaseController<T extends BaseDocument> {
   }
 
   @Post()
+  @ApiBody({ type: BaseCreateDto })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async create(@Body() entity: T): Promise<T> {
+  async create(@Body() entity: BaseCreateDto): Promise<T> {
     return await this.iBaseService.create(entity);
   }
 
@@ -47,9 +56,10 @@ export class BaseController<T extends BaseDocument> {
   }
 
   @Put()
+  @ApiBody({ type: BaseUpdateDto })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @ApiResponse({ status: 200, description: 'Model update successfully.' })
-  async update(id: string, @Body() entity: T): Promise<T> {
+  async update(id: string, @Body() entity: BaseUpdateDto): Promise<T> {
     return await this.iBaseService.updateOne(id, entity);
   }
 }

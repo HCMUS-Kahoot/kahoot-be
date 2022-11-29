@@ -6,9 +6,9 @@ export type UserDocument = User & BaseDocument;
 export class User extends Base {
   @Prop({ required: true, type: String, description: 'email' })
   email: string;
-  @Prop({ required: true, type: String, description: 'password'})
+  @Prop({ required: true, type: String, description: 'password' })
   password: string;
-  @Prop({type: String, description:'refreshToken'})
+  @Prop({ type: String, description: 'refreshToken' })
   refreshToken: string;
   @Prop({ type: String, description: 'firstName' })
   firstName: string;
