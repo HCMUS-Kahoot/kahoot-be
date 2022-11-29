@@ -7,7 +7,7 @@ import { IBaseService } from './IBase.service';
 
 @Injectable()
 export class BaseService<T extends BaseDocument> implements IBaseService<T> {
-  constructor(private readonly genericRepository: BaseRepository<T>) {}
+  constructor(private readonly genericRepository: BaseRepository<T>) { }
 
   async create(model): Promise<T> {
     return this.genericRepository.create(model);
@@ -26,8 +26,8 @@ export class BaseService<T extends BaseDocument> implements IBaseService<T> {
     throw new NotFoundException('Item with id: ' + id + ' not found');
   }
 
-  async getAll(): Promise<T[]> {
-    return this.genericRepository.findAll();
+  async getAll(filter): Promise<T[]> {
+    return this.genericRepository.findAll(filter);
   }
 
   async getItemById(id: string): Promise<T> {
@@ -36,5 +36,12 @@ export class BaseService<T extends BaseDocument> implements IBaseService<T> {
       return model;
     }
     throw new NotFoundException('Item with id: ' + id + ' not found');
+  }
+  async getItemByQuery(query): Promise<T[]> {
+    const model = await this.genericRepository.findAll(query);
+    if (model.length > 0) {
+      return model;
+    }
+    throw new NotFoundException('Item with query: ' + query + ' not found');
   }
 }

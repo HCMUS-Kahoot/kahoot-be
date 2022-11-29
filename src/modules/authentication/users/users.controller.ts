@@ -4,8 +4,13 @@ import { UserDocument } from './schema/users.schema';
 import { UsersService } from './users.service';
 
 @Controller('users')
-export class UsersController extends BaseController<UserDocument> {
+export class UsersController {
   constructor(private readonly usersService: UsersService) {
-    super(usersService);
+    // super(usersService);
   }
 }
+// export class UsersController extends BaseController<UserDocument> {
+//   constructor(private readonly usersService: UsersService) {
+//     super(usersService);
+//   }
+// }

@@ -21,12 +21,12 @@ export class BaseController<
   BaseUpdateDto,
 > implements IBaseController<T, BaseCreateDto, BaseUpdateDto>
 {
-  constructor(private readonly iBaseService: IBaseService<T>) {}
+  constructor(private readonly iBaseService: IBaseService<T>) { }
 
   @Get()
   @ApiResponse({ status: 200, description: 'Ok' })
-  async findAll(): Promise<T[]> {
-    return await this.iBaseService.getAll();
+  async findAll(filter): Promise<T[]> {
+    return await this.iBaseService.getAll(filter);
   }
 
   @Get(':id')

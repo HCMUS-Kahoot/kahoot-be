@@ -1,7 +1,7 @@
 export interface IBaseController<EntityType, CreateDto, UpdateDto> {
   findById(id: string): Promise<EntityType>;
 
-  findAll(): Promise<EntityType[]>;
+  findAll(filter): Promise<EntityType[]>;
 
   create(body: CreateDto): Promise<EntityType>;
 
