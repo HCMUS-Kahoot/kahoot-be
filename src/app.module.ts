@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { LoggerMiddleware } from './utils/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GroupsModule } from './modules/groups/groups.module';
+import { AuthModule } from './modules/authentication/authentication.module';
 import { GroupMembersModule } from './modules/group-members/group-members.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 @Module({
@@ -24,6 +25,7 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
       }),
     }),
     GroupsModule,
+    AuthModule,
     GroupMembersModule,
     ProfilesModule,
   ],

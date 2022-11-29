@@ -25,6 +25,7 @@ async function bootstrap() {
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    exposedHeaders: ['refresh-token', 'access-token'],
   });
   const customOptions: SwaggerCustomOptions = {
     swaggerOptions: {

@@ -12,4 +12,4 @@ import { ProfileSchema } from './schema/profiles.schema';
   controllers: [ProfilesController],
   providers: [ProfilesService, ProfilesRepository],
 })
-export class ProfilesModule { }
+export class ProfilesModule {}
