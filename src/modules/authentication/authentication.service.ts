@@ -93,7 +93,7 @@ export class AuthService {
     const existedUser=await this.usersService.getUserByEmail(req.user.email);
     if(!existedUser)
     {
-      const hash = await bcrypt.hash(req.user.password, 12);
+      const hash = await bcrypt.hash('123456', 12);
       const createUser= await this.usersService.create({
         email: req.user.email,
         password: hash,
