@@ -80,16 +80,57 @@ export class AuthService {
         accessTokenSignConfig,
       );
       return {
-        accessToken: newAccessToken,
-      };
+        access_token: newAccessToken
+      }
     }
     return null;
   }
-  getTokenFromRequestHeader(request: any): string {
-    const requestAuthorization = request.headers.authorization;
-    const beforeExtractToken = requestAuthorization.split(' ');
-    const token = beforeExtractToken[1];
-    return token;
+  async loginWithThirdService(req): Promise<any>{
+    if(!req.user)
+    {
+      throw new BadRequestException("Can not read user from request which is required field");
+    }
+    const existedUser=await this.usersService.getUserByEmail(req.user.email);
+    if(!existedUser)
+    {
+      const hash = await bcrypt.hash('123456', 12);
+      const createUser= await this.usersService.create({
+        email: req.user.email,
+        password: hash,
+        refreshToken: "",
+      })
+      const userId = await this.usersService.getUserIdByEmail(req.user.email);
+      const payload={email: req.user.email, sub: userId}
+      const newRefreshToken = this.jwtService.sign(payload, refreshTokenSignConfig);
+      await this.usersService.updateUserRefreshToken(userId,newRefreshToken)
+      if(createUser)
+      {
+        return {
+          access_token: this.jwtService.sign(payload, accessTokenSignConfig),
+          refresh_token: newRefreshToken,
+        }
+      }
+      return null
+    }
+    const currentRefreshToken = existedUser.refreshToken;
+    const expired=this.tokenToPayload(currentRefreshToken).exp
+    const userId = await this.usersService.getUserIdByEmail(req.user.email);
+    const payload ={sub: userId, email: req.user.email}
+    if (Date.now() >= parseInt(expired) * 1000) {
+      const newRefreshToken=this.jwtService.sign(payload, refreshTokenSignConfig);
+      await this.usersService.updateUserRefreshToken(userId,newRefreshToken);
+    }
+    return {
+      access_token: this.jwtService.sign(payload, accessTokenSignConfig),
+      refresh_token: (await this.usersService.getUserByEmail(req.user.email)).refreshToken,
+    }
+  }
+
+  getTokenFromRequestHeader(request: any): string{
+    const requestAuthorization=request.headers.authorization;
+    const beforeExtractToken=requestAuthorization.split(" ");
+    const token=beforeExtractToken[1]
+    return token
   }
   tokenToPayload(token: string): any {
     return this.jwtService.decode(token);
