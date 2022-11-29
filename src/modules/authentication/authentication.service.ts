@@ -1,13 +1,18 @@
 import { UsersService } from './users/users.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { API_SEND_MAIL_KEY } from '../../constant';
+import { ConfigService } from "@nestjs/config";
 import { accessTokenSignConfig, refreshTokenSignConfig } from './tokenConfig';
 import * as bcrypt from 'bcrypt';
+import sendGrid = require('@sendgrid/mail');
+import randomstringGenerator = require('randomstring');
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly config: ConfigService,
   ) {}
   async validateUser(email: string, password: string): Promise<any> {
     return await this.usersService.validateUserPassword(email, password);
@@ -124,6 +129,48 @@ export class AuthService {
       access_token: this.jwtService.sign(payload, accessTokenSignConfig),
       refresh_token: (await this.usersService.getUserByEmail(req.user.email)).refreshToken,
     }
+  }
+  async sentActivateAccountEmail(userInfo): Promise<any>{
+    const email=userInfo.email;
+    const activateCode = randomstringGenerator.generate();
+    const setResult = await this.usersService.setActivatedCode(userInfo.sub,activateCode);
+    if(setResult)
+    {
+      const senderApiKey=this.config.get<string>(API_SEND_MAIL_KEY)
+      sendGrid.setApiKey(senderApiKey)
+      const message = {
+        to: email,
+        from: 'darkflamekhtn@gmail.com',
+        subject: 'Activate your account now!',
+        html:`http://localhost:5000/api/auth/activateAccount?userId=${userInfo.sub}&activateCode=${activateCode}`
+      }
+      sendGrid.send(message)
+    }
+    else{
+      throw new Error("Fail to set activate code to user");
+    }    
+  }
+
+  async activateUser(query: any): Promise<any> {
+    if(!query.userId||!query.activateCode)
+    {
+      throw new BadRequestException("Can not read userId or activateCode from query params which is required field");
+    }
+    const userFindById= await this.usersService.getItemById(query.userId);
+    if(!userFindById)
+    {
+      throw new BadRequestException("Can not find user with given userId taken from query params")
+    }
+    if(userFindById.activateCode!==query.activateCode)
+    {
+      return false;
+    }
+    const activateResult= await this.usersService.updateActivateStatus(query.userId, true);
+    if(activateResult)
+    {
+      return true;
+    }
+    return false;
   }
 
   getTokenFromRequestHeader(request: any): string{

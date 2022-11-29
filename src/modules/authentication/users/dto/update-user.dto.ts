@@ -15,4 +15,11 @@ export class UpdateUserDto {
   @IsString()
   @ApiProperty({ description: 'refreshToken', type: String })
   refreshToken: string;
+  
+  @ApiProperty({ description: 'isActivated', type: Boolean })
+  isActivated: boolean;
+  
+  @IsString()
+  @ApiProperty({ description: 'activateCode', type: String })
+  activateCode: string;
 }

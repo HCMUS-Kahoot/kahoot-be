@@ -1,7 +1,7 @@
 import { AuthGuard } from '@nestjs/passport';
 import { JwtRefreshAuthGuard } from '../../common/guards/jwt-refresh-auth.guard';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Controller, Post, UseGuards, Request, Response, Get, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Response, Get, Body, Query } from '@nestjs/common';
 import { AuthService } from './authentication.service';
 
 @Controller('auth')
@@ -66,6 +66,7 @@ export class AuthController {
     const authInfo =await this.authservice.loginWithThirdService(req);
     if(authInfo)
     {
+      console.log("This is auth info: ", authInfo);
       res.set({
         'access-token': authInfo.access_token,
         'refresh-token': authInfo.refresh_token
@@ -73,5 +74,25 @@ export class AuthController {
       return res.status(200).send()
     }
     return res.status(500).send("Can not login with gooogle")
+  }
+
+  @Get('sendEmail')
+  @UseGuards(JwtAuthGuard)
+  async sendActivateEmail(@Request() req: any):Promise<any>
+  {
+    const accessToken=this.authservice.getTokenFromRequestHeader(req);
+    const payload = this.authservice.tokenToPayload(accessToken);
+    return await this.authservice.sentActivateAccountEmail(payload);
+  }
+
+  @Get('activateAccount')
+  async activateAccount(@Request() req: any, @Query() query): Promise<any>
+  {
+    const result = await this.authservice.activateUser(query);
+    if(result)
+    {
+      return "Your account has been activated!";
+    }
+    else return result;
   }
 }
