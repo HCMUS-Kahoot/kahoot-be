@@ -6,7 +6,7 @@ import { GroupDocument } from './schema/groups.schema';
 import { ApiTags } from '@nestjs/swagger';
 import { FactoryBaseController } from 'src/base/factory-base.controller';
 import { GroupMembersService } from '../group-members/group-members.service';
-import { GetCurrentUserId } from '../../common/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator';
 
 @Controller('groups')
 @ApiTags('groups')

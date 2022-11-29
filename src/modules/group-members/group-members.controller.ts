@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { identity } from 'rxjs';
-import { GetCurrentUserId } from 'src/common/decorators/get-current-user.decorator';
+import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 import { FactoryBaseController } from '../../base/factory-base.controller';
 import { Override } from '../../common/decorators/override.decorator';
 import { AddMemberDto } from './dto/add-member.dto';
