@@ -14,5 +14,6 @@ import GroupAbility from './group-authorization';
   ],
   controllers: [GroupMembersController],
   providers: [GroupMembersService, GroupMembersRepository, GroupAbility],
+  exports: [GroupMembersService],
 })
 export class GroupMembersModule { }
