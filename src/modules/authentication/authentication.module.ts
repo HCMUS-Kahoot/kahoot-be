@@ -10,11 +10,15 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 @Module({
-  imports: [UserModule, PassportModule, JwtModule.register({}),
-    ConfigModule
-  ],
+  imports: [UserModule, PassportModule, JwtModule.register({}), ConfigModule],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy, GoogleStrategy],
-  exports: [AuthService]
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshStrategy,
+    GoogleStrategy,
+  ],
+  exports: [AuthService],
 })
 export class AuthModule { }

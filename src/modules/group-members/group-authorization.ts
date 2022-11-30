@@ -1,14 +1,25 @@
-const PowerIndicator = ["USER", "CO-OWNER", "OWNER"];
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export default class GroupAbility {
 
-  powerIndicator: any;
   constructor() {
-    this.powerIndicator = Object.assign({}, PowerIndicator)
   }
-
+  getPowerIndicator(val) {
+    switch (val) {
+      case "OWNER":
+        return 2
+      case "COHOST":
+        return 1
+      default:
+        return 0;
+    }
+  }
   isAbilityInGroup(user, target): boolean {
-    return this.powerIndicator[user.role] > this.powerIndicator[target.role];
+    return (
+      this.getPowerIndicator(user.role.toUpperCase()) >
+      this.getPowerIndicator(target.role.toUpperCase())
+    );
   }
 }
 
