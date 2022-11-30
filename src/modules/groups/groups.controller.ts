@@ -29,17 +29,18 @@ export class GroupsController extends FactoryBaseController<
 
   @Get(':id/members')
   async getMembersByGroupId(@Param('id') id: string) {
-    const grInfor = await this.memberService.getItemByQuery({
+    const grInfor = await this.memberService.getAll({
       groupId: id,
     });
-    const task = grInfor.map(async (group) => ({
-      ...this.userService.getCurrentUser(group.memberId),
-      role: group.role,
-    }));
+    const task = grInfor.map(async (group) => {
+      const user = await this.userService.getCurrentUser(group.memberId);
+      return { ...user, role: group.role };
+    });
 
-    return Promise.all(task).then((result) => {
+    const data = await Promise.all(task).then((result) => {
       return result;
     });
+    return data;
   }
 
   @Override()
@@ -63,5 +64,25 @@ export class GroupsController extends FactoryBaseController<
     return Promise.all(task).then((result) => {
       return result;
     });
+  }
+
+  @Get(':id/invitations')
+  @UseGuards(JwtAuthGuard)
+  async getInvitationsByGroupId(
+    @Param('id') id: string,
+    @GetCurrentUserId() userId: string,
+  ) {
+    const exist = await this.memberService.getItemByQuery({
+      groupId: id,
+      memberId: userId,
+    });
+    if (exist.length > 0) {
+      return exist[0];
+    }
+    return await this.memberService.create({
+      groupId: id,
+      memberId: userId,
+      role: 'member',
+    })
   }
 }
