@@ -1,7 +1,7 @@
 import { AuthGuard } from '@nestjs/passport';
 import { JwtRefreshAuthGuard } from '../../common/guards/jwt-refresh-auth.guard';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Controller, Post, UseGuards, Request, Response, Get, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Response, Get, Body, Query } from '@nestjs/common';
 import { AuthService } from './authentication.service';
 import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 
@@ -62,21 +62,45 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@Response() res: any, @Request() req: any): Promise<any> {
-    const authInfo = await this.authservice.loginWithThirdService(req);
-    if (authInfo) {
+  async googleLogin(@Response() res: any, @Request() req: any): Promise<any>
+  {
+    const rawHeaders = req.rawHeaders;
+    const clientSide = rawHeaders[rawHeaders.indexOf('Referer') + 1];
+    const authInfo =await this.authservice.loginWithThirdService(req);
+    if(authInfo)
+    {
+      console.log("This is auth info: ", authInfo);
       res.set({
         'access-token': authInfo.access_token,
         'refresh-token': authInfo.refresh_token
       })
-      return res.status(200).send()
+      return res.status(200).redirect(`${clientSide}redirectPage/${authInfo.access_token}/${authInfo.refresh_token}`)
     }
     return res.status(500).send("Can not login with gooogle")
   }
 
+  @Get('sendEmail')
+  @UseGuards(JwtAuthGuard)
+  async sendActivateEmail(@Request() req: any):Promise<any>
+  {
+    const accessToken=this.authservice.getTokenFromRequestHeader(req);
+    const payload = this.authservice.tokenToPayload(accessToken);
+    return await this.authservice.sentActivateAccountEmail(payload);
+  }
+
+  @Get('activateAccount')
+  async activateAccount(@Request() req: any, @Query() query): Promise<any>
+  {
+    const result = await this.authservice.activateUser(query);
+    if(result)
+    {
+      return "Your account has been activated!";
+    }
+    else return result;
+  }
   @Get('/current-user')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@GetCurrentUserId() userId) {
+  async getCurrentUser(@GetCurrentUserId() userId){
     return await this.authservice.getCurrentUser(userId);
   }
 }

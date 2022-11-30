@@ -52,4 +52,26 @@ export class UsersRepository extends BaseRepository<UserDocument> {
       throw new Error(error);
     }
   }
+  async setUserActivateCode(userId: String, activateCode: String): Promise<any> {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new BadRequestException('The user with given id does not exist');
+      }
+      return await this.userModel.findByIdAndUpdate(userId, { activateCode });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async setUserActivatedStatus(userId: String, status: Boolean): Promise<any> {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new BadRequestException('The user with given id does not exist');
+      }
+      return await this.userModel.findByIdAndUpdate(userId, { isActivated: status });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

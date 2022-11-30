@@ -66,4 +66,38 @@ export class UsersService extends BaseService<UserDocument> {
   async getUserIdByEmail(email: string): Promise<any> {
     return await this.usersRepository.getUserIdByEmail(email);
   }
+  async setActivatedCode(userId: string, activateCode: string): Promise<any> {
+    if (!userId || !activateCode) {
+      throw Error(
+        'setActivatedCode FAILED: Can not read userId or activateCode value which is required field!',
+      );
+    }
+    try {
+      return await this.usersRepository.setUserActivateCode(
+        userId,
+        activateCode,
+      );
+    } catch (error) {
+      throw Error(
+        "setActivatedCode FAILED: The userModel fail to update user's activateCode with given userId!",
+      );
+    }
+  }
+  async updateActivateStatus(userId: string, status: boolean): Promise<any> {
+    if (!userId || !status) {
+      throw Error(
+        'updateActivateStatus FAILED: Can not read userId or activate status value which is required field!',
+      );
+    }
+    try {
+      return await this.usersRepository.setUserActivatedStatus(
+        userId,
+        status,
+      );
+    } catch (error) {
+      throw Error(
+        "updateActivateStatus FAILED: The userModel fail to set user's activate status with given userId!",
+      );
+    }
+  }
 }

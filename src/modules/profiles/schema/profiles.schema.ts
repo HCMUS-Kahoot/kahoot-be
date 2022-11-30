@@ -31,7 +31,7 @@ export class Profile extends Base {
   kahoots: number;
 
   @Prop()
-  userId: string;
+  user: string;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
