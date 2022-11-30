@@ -1,13 +1,16 @@
+import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtRefreshAuthGuard } from '../../common/guards/jwt-refresh-auth.guard';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Controller, Post, UseGuards, Request, Response, Get, Body, Query } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Response, Get, Body, Query, Headers } from '@nestjs/common';
+import { REDIRECTPAGE } from '../../constant';
 import { AuthService } from './authentication.service';
 import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authservice: AuthService) {
+  constructor(private readonly authservice: AuthService,
+    private readonly config: ConfigService) {
   }
   @UseGuards(JwtAuthGuard)
   @Get('protected')
@@ -62,10 +65,10 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@Response() res: any, @Request() req: any): Promise<any>
+  async googleLogin(@Response() res: any, @Request() req: any, @Headers() header: any): Promise<any>
   {
-    const rawHeaders = req.rawHeaders;
-    const clientSide = rawHeaders[rawHeaders.indexOf('Referer') + 1];
+    console.log()
+    const clientSide = header.origin;
     const authInfo =await this.authservice.loginWithThirdService(req);
     if(authInfo)
     {
@@ -74,7 +77,8 @@ export class AuthController {
         'access-token': authInfo.access_token,
         'refresh-token': authInfo.refresh_token
       })
-      return res.status(200).redirect(`${clientSide}redirectPage/${authInfo.access_token}/${authInfo.refresh_token}`)
+      console.log("This is clienSide", clientSide)
+      return res.status(200).redirect(`${this.config.get<string>(REDIRECTPAGE)}redirectPage/${authInfo.access_token}/${authInfo.refresh_token}`)
     }
     return res.status(500).send("Can not login with gooogle")
   }
