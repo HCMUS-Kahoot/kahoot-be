@@ -6,6 +6,9 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ProfilesRepository extends BaseRepository<ProfileDocument> {
+  getProfileByUserId(id: string) {
+    return this.profileModel.findOne({ user: id });
+  }
   constructor(
     @InjectModel(Profile.name)
     private readonly profileModel: Model<ProfileDocument>,

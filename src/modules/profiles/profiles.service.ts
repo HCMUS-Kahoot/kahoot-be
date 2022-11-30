@@ -5,7 +5,11 @@ import { ProfilesRepository } from './profiles.repository';
 
 @Injectable()
 export class ProfilesService extends BaseService<ProfileDocument> {
+
   constructor(private readonly profilesRepository: ProfilesRepository) {
     super(profilesRepository);
+  }
+  getProfileByUserId(id: string) {
+    return this.profilesRepository.getProfileByUserId(id);
   }
 }
