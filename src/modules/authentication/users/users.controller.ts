@@ -10,11 +10,12 @@ import { UsersService } from './users.service';
 @Controller('users')
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
-export class UsersController extends FactoryBaseController<UserDocument, CreateUserDto, UpdateUserDto>(
-  CreateUserDto, UpdateUserDto
-) {
+export class UsersController extends FactoryBaseController<
+  UserDocument,
+  CreateUserDto,
+  UpdateUserDto
+>(CreateUserDto, UpdateUserDto) {
   constructor(private readonly usersService: UsersService) {
     super(usersService);
   }
 }
-

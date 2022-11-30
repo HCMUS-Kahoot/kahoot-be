@@ -9,8 +9,8 @@ export class UpdateMemberDto {
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'User Id', type: String })
-  memberId: string;
+  @ApiProperty({ description: 'User email', type: String })
+  memberEmail: string;
 
   @IsString()
   @IsNotEmpty()

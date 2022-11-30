@@ -37,9 +37,6 @@ export class BaseService<T extends BaseDocument> implements IBaseService<T> {
   }
   async getItemByQuery(query): Promise<T[]> {
     const model = await this.genericRepository.findAll(query);
-    if (model.length > 0) {
-      return model;
-    }
-    throw new NotFoundException('Item with query: ' + query + ' not found');
+    return model;
   }
 }
