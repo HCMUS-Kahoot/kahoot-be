@@ -28,4 +28,8 @@ export class CreateProfileDto {
 
   @ApiProperty({ description: 'kahoots', type: Number })
   kahoots: number;
+
+  @IsString()
+  @ApiProperty({ type: String, description: 'user' })
+  user: string;
 }

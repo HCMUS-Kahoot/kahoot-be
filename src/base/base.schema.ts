@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-export type BaseDocument = Base & Document;
+export type BaseDocument = Base & Document & { _id: string };
 @Schema()
 export class Base {
   @Prop()

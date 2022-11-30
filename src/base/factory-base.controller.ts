@@ -30,8 +30,8 @@ export function FactoryBaseController<T, C, U>(
     constructor(protected readonly iBaseService: IBaseService<T>) { }
     @Get()
     @ApiResponse({ status: 200, description: 'Ok' })
-    async findAll(): Promise<T[]> {
-      return await this.iBaseService.getAll();
+    async findAll(filter): Promise<T[]> {
+      return await this.iBaseService.getAll(filter);
     }
 
     @Get(':id')
