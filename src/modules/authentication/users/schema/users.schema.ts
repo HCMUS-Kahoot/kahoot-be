@@ -10,6 +10,10 @@ export class User extends Base {
   password: string;
   @Prop({ type: String, description: 'refreshToken' })
   refreshToken: string;
+  @Prop({ type: Boolean, description: 'isActivated', default: false })
+  isActivated: boolean;
+  @Prop({ type: String, description: 'activateCode' })
+  activateCode: string;
   @Prop({ type: String, description: 'firstName' })
   firstName: string;
   @Prop({ type: String, description: 'lastName' })
