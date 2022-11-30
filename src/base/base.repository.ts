@@ -5,7 +5,7 @@ import { BaseDocument } from './base.schema';
 export class BaseRepository<T extends BaseDocument> {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private readonly container: Model<T>) {}
+  constructor(private readonly container: Model<T>) { }
 
   async create(item): Promise<T> {
     try {
@@ -42,7 +42,7 @@ export class BaseRepository<T extends BaseDocument> {
 
   async findAll(filter?: FilterQuery<T>, options?: QueryOptions): Promise<T[]> {
     try {
-      return await this.container.find(filter, null, options);
+      return await this.container.find(filter, null, options).exec();
     } catch (error) {
       this.logger.error(error);
       throw new BadGatewayException(error.message);

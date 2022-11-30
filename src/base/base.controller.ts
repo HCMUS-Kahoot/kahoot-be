@@ -44,7 +44,7 @@ export class BaseController<
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async create(@Body() entity: BaseCreateDto): Promise<T> {
+  async create(@Body() entity: BaseCreateDto, option?: any): Promise<T> {
     return await this.iBaseService.create(entity);
   }
 

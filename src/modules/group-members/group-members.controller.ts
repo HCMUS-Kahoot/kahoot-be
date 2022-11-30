@@ -1,12 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   NotFoundException,
   Patch,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { identity } from 'rxjs';
 import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 import { FactoryBaseController } from '../../base/factory-base.controller';
 import { Override } from '../../common/decorators/override.decorator';
@@ -42,7 +42,10 @@ export class GroupMembersController extends FactoryBaseController<
 
     if (userInGroup.length > 0 && targetUser.length > 0) {
       if (this.groupAbility.isAbilityInGroup(userInGroup, targetUser)) {
-        return this.groupMembersService.updateOne(targetUser[0]._id, body);
+        return await this.groupMembersService.updateOne(
+          targetUser[0]._id,
+          body,
+        );
       }
       throw new UnauthorizedException(
         'You are not authorized to update this user',

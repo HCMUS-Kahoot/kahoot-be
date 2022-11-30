@@ -1,5 +1,3 @@
-import { BaseUpdateDto } from './dto/base-update.dto';
-import { BaseCreateDto } from './dto/base-create.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseDocument } from './base.schema';
 import { BaseRepository } from './base.repository';
@@ -27,7 +25,7 @@ export class BaseService<T extends BaseDocument> implements IBaseService<T> {
   }
 
   async getAll(filter): Promise<T[]> {
-    return this.genericRepository.findAll(filter);
+    return await this.genericRepository.findAll(filter);
   }
 
   async getItemById(id: string): Promise<T> {
