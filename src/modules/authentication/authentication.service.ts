@@ -8,6 +8,7 @@ const convertToUserInfor = (user: any) => ({
   email: user.email,
   firstName: user.firstName,
   lastName: user.lastName,
+  id: user._id,
 });
 @Injectable()
 export class AuthService {
