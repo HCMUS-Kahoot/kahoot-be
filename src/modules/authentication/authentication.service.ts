@@ -63,6 +63,8 @@ export class AuthService {
       email: user.email,
       password: hash,
       refreshToken: '',
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
     const userId = await this.usersService.getUserIdByEmail(user.email);
     const payload = { email: user.email, sub: userId };

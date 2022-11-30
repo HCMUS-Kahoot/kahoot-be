@@ -15,4 +15,12 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({ description: 'refreshToken', type: String })
   refreshToken: string;
+  
+  @IsString()
+  @ApiProperty({ description: 'firstName', type: String })
+  firstName: string;
+  
+  @IsString()
+  @ApiProperty({ description: 'lastName', type: String })
+  lastName: string;
 }
