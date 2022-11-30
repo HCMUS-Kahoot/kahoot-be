@@ -23,4 +23,12 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({ description: 'activateCode', type: String })
   activateCode: string;
+  
+  @IsString()
+  @ApiProperty({ description: 'firstName', type: String })
+  firstName: string;
+  
+  @IsString()
+  @ApiProperty({ description: 'lastName', type: String })
+  lastName: string;
 }

@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GroupMembersController } from './group-members.controller';
 import { GroupMembersService } from './group-members.service';
 import { GroupMembersSchema } from './schema/group-members.schema';
+import GroupAbility from './group-authorization';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { GroupMembersSchema } from './schema/group-members.schema';
     ]),
   ],
   controllers: [GroupMembersController],
-  providers: [GroupMembersService, GroupMembersRepository],
+  providers: [GroupMembersService, GroupMembersRepository, GroupAbility],
+  exports: [GroupMembersService, GroupMembersRepository, GroupAbility],
 })
-export class GroupMembersModule {}
+export class GroupMembersModule { }

@@ -21,12 +21,12 @@ export class BaseController<
   BaseUpdateDto,
 > implements IBaseController<T, BaseCreateDto, BaseUpdateDto>
 {
-  constructor(private readonly iBaseService: IBaseService<T>) {}
+  constructor(private readonly iBaseService: IBaseService<T>) { }
 
   @Get()
   @ApiResponse({ status: 200, description: 'Ok' })
-  async findAll(): Promise<T[]> {
-    return await this.iBaseService.getAll();
+  async findAll(filter): Promise<T[]> {
+    return await this.iBaseService.getAll(filter);
   }
 
   @Get(':id')
@@ -44,7 +44,7 @@ export class BaseController<
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async create(@Body() entity: BaseCreateDto): Promise<T> {
+  async create(@Body() entity: BaseCreateDto, option?: any): Promise<T> {
     return await this.iBaseService.create(entity);
   }
 

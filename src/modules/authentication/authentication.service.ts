@@ -1,3 +1,4 @@
+import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 import { UsersService } from './users/users.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -7,6 +8,12 @@ import { accessTokenSignConfig, refreshTokenSignConfig } from './tokenConfig';
 import * as bcrypt from 'bcrypt';
 import sendGrid = require('@sendgrid/mail');
 import randomstringGenerator = require('randomstring');
+const convertToUserInfor = (user: any) => ({
+  email: user.email,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  id: user._id,
+});
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,28 +24,32 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     return await this.usersService.validateUserPassword(email, password);
   }
+  async getCurrentUser(id: string) {
+    return convertToUserInfor(await this.usersService.getItemById(id));
+  }
   async login(user: any) {
     const result = await this.usersService.validateUserPassword(
       user.email,
       user.password,
     );
     if (result) {
-      const userId = await this.usersService.getUserIdByEmail(user.email);
-      const payload = { email: user.email, sub: userId };
-      const refreshToken = (await this.usersService.getItemById(userId))
+      const thisUser = await this.usersService.getUserByEmail(user.email);
+      const payload = { email: thisUser.email, sub: thisUser._id };
+      const refreshToken = (await this.usersService.getItemById(thisUser._id))
         .refreshToken;
-      const expired = this.tokenToPayload(refreshToken).exp;
+      const expired = this.tokenToPayload(refreshToken)?.exp;
       if (Date.now() >= parseInt(expired) * 1000) {
         const newRefreshToken = this.jwtService.sign(
           payload,
           refreshTokenSignConfig,
         );
-        await this.usersService.updateUserRefreshToken(userId, newRefreshToken);
+        await this.usersService.updateUserRefreshToken(thisUser._id, newRefreshToken);
       }
       return {
         access_token: this.jwtService.sign(payload, accessTokenSignConfig),
-        refresh_token: (await this.usersService.getUserByEmail(user.email))
+        refresh_token: (await this.usersService.getUserByEmail(thisUser.email))
           .refreshToken,
+        userInfor: convertToUserInfor(thisUser)
       };
     }
   }
@@ -57,6 +68,8 @@ export class AuthService {
       email: user.email,
       password: hash,
       refreshToken: '',
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
     const userId = await this.usersService.getUserIdByEmail(user.email);
     const payload = { email: user.email, sub: userId };
@@ -90,26 +103,23 @@ export class AuthService {
     }
     return null;
   }
-  async loginWithThirdService(req): Promise<any>{
-    if(!req.user)
-    {
+  async loginWithThirdService(req): Promise<any> {
+    if (!req.user) {
       throw new BadRequestException("Can not read user from request which is required field");
     }
-    const existedUser=await this.usersService.getUserByEmail(req.user.email);
-    if(!existedUser)
-    {
+    const existedUser = await this.usersService.getUserByEmail(req.user.email);
+    if (!existedUser) {
       const hash = await bcrypt.hash('123456', 12);
-      const createUser= await this.usersService.create({
+      const createUser = await this.usersService.create({
         email: req.user.email,
         password: hash,
         refreshToken: "",
       })
       const userId = await this.usersService.getUserIdByEmail(req.user.email);
-      const payload={email: req.user.email, sub: userId}
+      const payload = { email: req.user.email, sub: userId }
       const newRefreshToken = this.jwtService.sign(payload, refreshTokenSignConfig);
-      await this.usersService.updateUserRefreshToken(userId,newRefreshToken)
-      if(createUser)
-      {
+      await this.usersService.updateUserRefreshToken(userId, newRefreshToken)
+      if (createUser) {
         return {
           access_token: this.jwtService.sign(payload, accessTokenSignConfig),
           refresh_token: newRefreshToken,
@@ -118,12 +128,12 @@ export class AuthService {
       return null
     }
     const currentRefreshToken = existedUser.refreshToken;
-    const expired=this.tokenToPayload(currentRefreshToken).exp
+    const expired = this.tokenToPayload(currentRefreshToken).exp
     const userId = await this.usersService.getUserIdByEmail(req.user.email);
-    const payload ={sub: userId, email: req.user.email}
+    const payload = { sub: userId, email: req.user.email }
     if (Date.now() >= parseInt(expired) * 1000) {
-      const newRefreshToken=this.jwtService.sign(payload, refreshTokenSignConfig);
-      await this.usersService.updateUserRefreshToken(userId,newRefreshToken);
+      const newRefreshToken = this.jwtService.sign(payload, refreshTokenSignConfig);
+      await this.usersService.updateUserRefreshToken(userId, newRefreshToken);
     }
     return {
       access_token: this.jwtService.sign(payload, accessTokenSignConfig),
@@ -174,13 +184,14 @@ export class AuthService {
     return false;
   }
 
-  getTokenFromRequestHeader(request: any): string{
-    const requestAuthorization=request.headers.authorization;
-    const beforeExtractToken=requestAuthorization.split(" ");
-    const token=beforeExtractToken[1]
+  getTokenFromRequestHeader(request: any): string {
+    const requestAuthorization = request.headers.authorization;
+    const beforeExtractToken = requestAuthorization.split(" ");
+    const token = beforeExtractToken[1]
     return token
   }
   tokenToPayload(token: string): any {
     return this.jwtService.decode(token);
   }
+
 }

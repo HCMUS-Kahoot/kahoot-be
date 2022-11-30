@@ -1,22 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { } from 'class-validator';
 
 export class CreateProfileDto {
-  @IsString()
-  @IsNotEmpty()
+
   @ApiProperty({ description: 'name', type: String })
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({ description: 'workplace', type: String })
   workplace: string;
 
-  @IsString()
+
   @ApiProperty({ description: 'organization', type: String })
   organization: string;
 
-  @IsString()
+
   @ApiProperty({ description: 'cover_image_url', type: String })
   cover_image_url: string;
 
@@ -28,4 +25,8 @@ export class CreateProfileDto {
 
   @ApiProperty({ description: 'kahoots', type: Number })
   kahoots: number;
+
+
+  @ApiProperty({ type: String, description: 'user' })
+  user: string;
 }
