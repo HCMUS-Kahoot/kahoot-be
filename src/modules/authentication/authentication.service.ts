@@ -1,7 +1,7 @@
 import { UsersService } from './users/users.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { API_SEND_MAIL_KEY } from '../../constant';
+import { API_SEND_MAIL_KEY, DOMAINNAME } from '../../constant';
 import { ConfigService } from "@nestjs/config";
 import { accessTokenSignConfig, refreshTokenSignConfig } from './tokenConfig';
 import * as bcrypt from 'bcrypt';
@@ -134,6 +134,7 @@ export class AuthService {
     const email=userInfo.email;
     const activateCode = randomstringGenerator.generate();
     const setResult = await this.usersService.setActivatedCode(userInfo.sub,activateCode);
+    const domainName = this.config.get<string>(DOMAINNAME)
     if(setResult)
     {
       const senderApiKey=this.config.get<string>(API_SEND_MAIL_KEY)
@@ -142,7 +143,7 @@ export class AuthService {
         to: email,
         from: 'darkflamekhtn@gmail.com',
         subject: 'Activate your account now!',
-        html:`http://localhost:5000/api/auth/activateAccount?userId=${userInfo.sub}&activateCode=${activateCode}`
+        html:`${domainName}api/auth/activateAccount?userId=${userInfo.sub}&activateCode=${activateCode}`
       }
       sendGrid.send(message)
     }

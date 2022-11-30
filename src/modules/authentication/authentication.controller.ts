@@ -63,6 +63,8 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleLogin(@Response() res: any, @Request() req: any): Promise<any>
   {
+    const rawHeaders = req.rawHeaders;
+    const clientSide = rawHeaders[rawHeaders.indexOf('Referer') + 1];
     const authInfo =await this.authservice.loginWithThirdService(req);
     if(authInfo)
     {
@@ -71,7 +73,7 @@ export class AuthController {
         'access-token': authInfo.access_token,
         'refresh-token': authInfo.refresh_token
       })
-      return res.status(200).send()
+      return res.status(200).redirect(`${clientSide}redirectPage/${authInfo.access_token}/${authInfo.refresh_token}`)
     }
     return res.status(500).send("Can not login with gooogle")
   }

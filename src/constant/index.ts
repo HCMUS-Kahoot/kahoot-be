@@ -8,3 +8,4 @@ export const GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID';
 export const GOOGLE_CLIENT_SECRET = 'GOOGLE_CLIENT_SECRET';
 export const API_SEND_MAIL_KEY='API_SEND_MAIL_KEY';
 export const PORT = 'PORT';
+export const DOMAINNAME = 'DOMAINNAME';
