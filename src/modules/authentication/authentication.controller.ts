@@ -97,9 +97,10 @@ export class AuthController {
       return "Your account has been activated!";
     }
     else return result;
+  }
   @Get('/current-user')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@GetCurrentUserId() userId) {
+  async getCurrentUser(@GetCurrentUserId() userId){
     return await this.authservice.getCurrentUser(userId);
   }
 }
