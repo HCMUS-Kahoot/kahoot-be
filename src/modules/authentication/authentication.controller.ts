@@ -6,8 +6,9 @@ import { Controller, Post, UseGuards, Request, Response, Get, Body, Query, Heade
 import { REDIRECTPAGE } from '../../constant';
 import { AuthService } from './authentication.service';
 import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
-
+import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authservice: AuthService,
     private readonly config: ConfigService) {
