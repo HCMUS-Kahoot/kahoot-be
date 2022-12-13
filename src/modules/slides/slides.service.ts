@@ -52,4 +52,8 @@ export class SlidesService extends BaseService<SlidesDocument> {
     newSlide.content=newSlideContent._id;
     return await newSlide.save();
   }
+  async getSlidesByPresentationIdPopulateContent(presentationId)
+  {
+    return await this.slideModel.find({presentation: presentationId}).populate('content')
+  }
 }
