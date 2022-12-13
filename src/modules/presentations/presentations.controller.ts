@@ -22,7 +22,7 @@ export class PresentationsController extends FactoryBaseController<
   }
   @Get('current-user-presentations')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUserGroups(@GetCurrentUserId() id: string) {
+  async getCurrentUserPresentations(@GetCurrentUserId() id: string) {
     const presentations = await this.presentationsService.getAll({ owner: id });
     return Promise.all(presentations).then((result) => {
       return result;

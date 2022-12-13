@@ -6,6 +6,12 @@ export class CreateSlidesDto{
     required: true,
   })
   slideType: String;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+  })
+  title: String;
   
   @ApiProperty({
     type: String,
@@ -14,7 +20,7 @@ export class CreateSlidesDto{
   presentation: String;
 
   @IsObject()
-  @ApiProperty({ type: Object, description: 'content' })
+  @ApiProperty({ type: Object, description: 'content', required: true })
   content: unknown;
 
   @ApiProperty({ type: 'array', description: 'correctAnswer' })

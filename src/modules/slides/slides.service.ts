@@ -32,4 +32,18 @@ export class SlidesService extends BaseService<SlidesDocument> {
   ){
     super(slidesRepository)
   }
+  async createOrUpdateASlide(slide, presentationId)
+  {
+    if(!slide._id)
+    {
+      return await this.createASlide(slide, presentationId)
+    }
+    else{
+      return await this.updateOne(slide.id, slide)
+    }
+  }
+  async createASlide(slide, presentationId)
+  {
+    
+  }
 }

@@ -16,6 +16,12 @@ export class Slide {
     enum: SlideType,
   })
   slideType: String;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  name: String;
   
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
