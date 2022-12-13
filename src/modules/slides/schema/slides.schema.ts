@@ -21,7 +21,7 @@ export class Slide {
     type: String,
     required: true,
   })
-  name: String;
+  title: String;
   
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

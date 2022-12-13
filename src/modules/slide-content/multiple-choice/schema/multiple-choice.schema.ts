@@ -4,10 +4,7 @@ export type MultipleChoiceDocument = MultipleChoice & Document;
 
 export class MultipleChoiceDetail {
   @Prop({required: true, type: String})
-  answerContent: String;
-
-  @Prop({type: String})
-  answerImg: String;
+  choiceContent: String;
 }
 
 @Schema()
