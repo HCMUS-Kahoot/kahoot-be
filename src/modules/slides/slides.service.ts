@@ -17,7 +17,7 @@ export class SlidesServiceFactory{
       case 'MultipleChoice':
         return this.multipleChoiceService;
       default:
-        return null;
+        throw new Error('Exercise type not found');
     }
   }
 }
@@ -36,6 +36,7 @@ export class SlidesService extends BaseService<SlidesDocument> {
   {
     if(!slide._id)
     {
+      console.log("This is presentation id: ", presentationId)
       return await this.createASlide(slide, presentationId)
     }
     else{
@@ -44,6 +45,11 @@ export class SlidesService extends BaseService<SlidesDocument> {
   }
   async createASlide(slide, presentationId)
   {
-    
+    slide.presentation=presentationId;
+    const newSlide=new this.slideModel(slide)
+    const newSlideContent = await this.slideServiceFactory.getService(slide.slideType).createContent(slide.content);
+    console.log("This is slide before created: ", slide)
+    newSlide.content=newSlideContent._id;
+    return await newSlide.save();
   }
 }

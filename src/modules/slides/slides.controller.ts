@@ -21,7 +21,7 @@ export class SlidesController extends FactoryBaseController<
   @Post('createOrUpdateListOfSlides')
   async createOrUpdateListOfSlides(@Body() body) {
     console.log("This is request body: ", body);
-    body.slides.forEach(slide => {
+    body.slideContent.forEach(slide => {
       this.slidesService.createOrUpdateASlide(slide,body.presentationId)
     });
   }

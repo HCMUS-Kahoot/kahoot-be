@@ -8,6 +8,6 @@ export class CreateMultipleChoiceDto {
   detail: MultipleChoiceDetail[];
 
   @IsNumber()
-  @ApiProperty({description: 'Multiple choice answer'})
-  answer: Number
+  @ApiProperty({required: true, description: 'Multiple choice answer'})
+  correctAnswer: Number
 }
