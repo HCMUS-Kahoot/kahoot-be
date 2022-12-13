@@ -10,6 +10,9 @@ import { GroupsModule } from './modules/groups/groups.module';
 import { AuthModule } from './modules/authentication/authentication.module';
 import { GroupMembersModule } from './modules/group-members/group-members.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { PresentationsModule } from './modules/presentations/presentations.module';
+import { SlidesModule } from './modules/slides/slides.module';
+import { SlideContentsModule } from './modules/slide-content/slide-content.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +31,9 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
     AuthModule,
     GroupMembersModule,
     ProfilesModule,
+    PresentationsModule,
+    SlideContentsModule,
+    SlidesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
