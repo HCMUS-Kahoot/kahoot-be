@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { MultipleChoiceService } from "../slide-content/multiple-choice/multiple-choice.service";
 import { Slide, SlidesDocument } from './schema/slides.schema';
 import { Model } from 'mongoose';
@@ -40,7 +40,7 @@ export class SlidesService extends BaseService<SlidesDocument> {
       return await this.createASlide(slide, presentationId)
     }
     else{
-      return await this.updateOne(slide.id, slide)
+      return await this.updateOne(slide._id, slide)
     }
   }
   async createASlide(slide, presentationId)
@@ -63,5 +63,16 @@ export class SlidesService extends BaseService<SlidesDocument> {
         content: this.slideServiceFactory.getService(slide.slideType.toString()).convertContent(slide.content)
       }
     })
+  }
+  async deleteASlide(slideId: any): Promise<SlidesDocument>
+  {
+    console.log("Delete function has been triggered: ", slideId)
+    const slide = await this.slideModel.findById(slideId);
+    if(slide)
+    {
+      await this.slideServiceFactory.getService(slide.slideType.toString()).deleteContent(slide.content)
+      return await this.slideModel.findByIdAndDelete(slideId);
+    }
+    throw NotFoundException;
   }
 }
