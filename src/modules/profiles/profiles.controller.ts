@@ -20,7 +20,6 @@ export class ProfilesController extends FactoryBaseController<
   @Get('user/:id')
   async getProfileByUserId(@Param('id') id: string) {
     const res = await this.profilesService.getAll({ user: id });
-    console.log('res', res);
     return res[0];
   }
   @Post('user/:id')

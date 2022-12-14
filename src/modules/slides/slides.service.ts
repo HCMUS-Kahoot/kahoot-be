@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { BaseService } from '../..//base/base.service';
 import { SlidesRepository } from './slides.repository';
 
+
 @Injectable()
 export class SlidesServiceFactory{
   constructor(
@@ -36,7 +37,6 @@ export class SlidesService extends BaseService<SlidesDocument> {
   {
     if(!slide._id)
     {
-      console.log("This is presentation id: ", presentationId)
       return await this.createASlide(slide, presentationId)
     }
     else{
@@ -48,12 +48,20 @@ export class SlidesService extends BaseService<SlidesDocument> {
     slide.presentation=presentationId;
     const newSlide=new this.slideModel(slide)
     const newSlideContent = await this.slideServiceFactory.getService(slide.slideType).createContent(slide.content);
-    console.log("This is slide before created: ", slide)
     newSlide.content=newSlideContent._id;
     return await newSlide.save();
   }
   async getSlidesByPresentationIdPopulateContent(presentationId)
   {
-    return await this.slideModel.find({presentation: presentationId}).populate('content')
+    const slidesResults = await this.slideModel.find({presentation: presentationId}).populate('content')
+    return slidesResults.map((slide) =>{
+      return {
+        _id: slide._id,
+        title: slide.title,
+        presentation: slide.presentation,
+        slideType: slide.slideType,
+        content: this.slideServiceFactory.getService(slide.slideType.toString()).convertContent(slide.content)
+      }
+    })
   }
 }

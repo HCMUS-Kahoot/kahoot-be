@@ -26,7 +26,6 @@ export class SlidesController extends FactoryBaseController<
   }
   @Get('getSlidesByPresentationId/:id')
   async getSlidesByPresentationIdWith(@Param('id') presentationId: String) {
-    console.log("This is presentation param:  ", presentationId)
     return await this.slidesService.getSlidesByPresentationIdPopulateContent(presentationId)
   }
 }
