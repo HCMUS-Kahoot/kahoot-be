@@ -3,13 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateMultipleChoiceDto } from "./dto/create-multiple-choice.dto";
 import { MultipleChoice, MultipleChoiceDocument, } from "./schema/multiple-choice.schema";
-import { plainToClass } from 'class-transformer';
-
-class MultipleChoiceDto{
-  _id: string;
-  detail: any;
-  correctAnser: number;
-}
 
 
 @Injectable()
@@ -27,7 +20,6 @@ export class MultipleChoiceService {
       dataItem.choices.push(choiceData.choiceContent)
       dataItem.data.push({name: choiceData.choiceContent, pv: 0})
     });
-    console.log("This is data item before return: ", dataItem);
     return dataItem
   }
 
