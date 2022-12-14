@@ -55,11 +55,12 @@ export class BaseController<
     return await this.iBaseService.delete(id);
   }
 
-  @Put()
+  @Put(':id')
   @ApiBody({ type: BaseUpdateDto })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @ApiResponse({ status: 200, description: 'Model update successfully.' })
-  async update(id: string, @Body() entity: BaseUpdateDto): Promise<T> {
+  async update(@Param('id') id: string, @Body() entity: BaseUpdateDto): Promise<T> {
+    console.log('update', id, entity);
     return await this.iBaseService.updateOne(id, entity);
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { CreatePresentationDto } from "./dto/create-presentation.dto";
 import { UpdatePresentationDto } from "./dto/update-presentation.dto";
 import { PresentationDocument } from "./schema/presentations.schema";
@@ -26,6 +26,12 @@ export class PresentationsController extends FactoryBaseController<
     const presentations = await this.presentationsService.getAll({ owner: id });
     return Promise.all(presentations).then((result) => {
       return result;
+    });
+  }
+  @Post('/name/:id/:name')
+  async updatePresentationName(@Param('id') id: string, @Param('name') name: string) {
+    return this.presentationsService.updateOne(id, {
+      name
     });
   }
 }
