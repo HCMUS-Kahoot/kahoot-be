@@ -21,10 +21,10 @@ export class SlidesServiceFactory{
     switch(type){
       case 'MultipleChoice':
         return this.multipleChoiceService;
-        case 'Heading':
-          return this.headingService;
-        case 'Paragraph':
-          return this.paragraphService;
+      case 'Heading':
+        return this.headingService;
+      case 'Paragraph':
+        return this.paragraphService;
       default:
         throw new Error('Exercise type not found');
     }
