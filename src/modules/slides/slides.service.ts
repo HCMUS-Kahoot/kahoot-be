@@ -5,18 +5,26 @@ import { Slide, SlidesDocument } from './schema/slides.schema';
 import { Model } from 'mongoose';
 import { BaseService } from '../..//base/base.service';
 import { SlidesRepository } from './slides.repository';
+import { HeadingService } from '../slide-content/heading/heading.service';
+import { ParagraphService } from '../slide-content/paragraph/paragraph.service';
 
 
 @Injectable()
 export class SlidesServiceFactory{
   constructor(
     private readonly multipleChoiceService: MultipleChoiceService,
+    private readonly headingService: HeadingService,
+    private readonly paragraphService: ParagraphService,
   ){}
   
   getService(type: string): any {
     switch(type){
       case 'MultipleChoice':
         return this.multipleChoiceService;
+        case 'Heading':
+          return this.headingService;
+        case 'Paragraph':
+          return this.paragraphService;
       default:
         throw new Error('Exercise type not found');
     }

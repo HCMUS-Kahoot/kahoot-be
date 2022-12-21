@@ -4,6 +4,8 @@ import { BaseDocument } from '../../../base/base.schema';
 import { Presentation } from '../../presentations/schema/presentations.schema';
 enum SlideType {
   MULTIPLE_CHOICE = 'MultipleChoice',
+  HEADING = 'Heading',
+  PARAGRAPH = 'Paragraph',
 }
 
 export type SlidesDocument= Slide & BaseDocument;
