@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
+  Param,
   Patch,
+  Put,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -62,6 +65,23 @@ export class GroupMembersController extends FactoryBaseController<
       throw new UnauthorizedException(
         'You are not authorized to update this user',
       );
+    }
+    throw new NotFoundException('User not found');
+  }
+
+  @Get('delete/:groupId/:memberEmail')
+  async deleteGroupMember(
+    @Param('groupId') groupId: string,
+    @Param('memberEmail') memberEmail: string,
+  ) {
+    
+    const member = await this.userService.getUserByEmail(memberEmail);
+    const targetUser = await this.groupMembersService.getItemByQuery({
+      memberId: member._id,
+      groupId: groupId,
+    });
+    if (targetUser.length > 0) {
+      return await this.groupMembersService.deleteOne(targetUser[0]._id);
     }
     throw new NotFoundException('User not found');
   }

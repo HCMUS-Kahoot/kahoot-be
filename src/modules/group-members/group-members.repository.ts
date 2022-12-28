@@ -9,6 +9,9 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class GroupMembersRepository extends BaseRepository<GroupMembersDocument> {
+  async deleteOne(data) {
+    return this.groupMembersModel.deleteOne(data);
+  }
   constructor(
     @InjectModel(GroupMembers.name)
     private readonly groupMembersModel: Model<GroupMembersDocument>,

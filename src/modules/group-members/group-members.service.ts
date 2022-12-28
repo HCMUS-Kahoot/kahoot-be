@@ -5,6 +5,9 @@ import { GroupMembersDocument } from './schema/group-members.schema';
 
 @Injectable()
 export class GroupMembersService extends BaseService<GroupMembersDocument> {
+  async deleteOne(_id: string) {
+    return this.groupMembersModel.deleteOne({_id} );
+  }
   constructor(private readonly groupMembersModel: GroupMembersRepository) {
     super(groupMembersModel);
   }
