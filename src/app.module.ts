@@ -13,6 +13,9 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
 import { PresentationsModule } from './modules/presentations/presentations.module';
 import { SlidesModule } from './modules/slides/slides.module';
 import { SlideContentsModule } from './modules/slide-content/slide-content.module';
+import { PresentationSessionsModule } from './modules/presentationSessions/presentationSessions.module';
+import { QuestionsModule } from './modules/questions/questions.module';
+import { ChatsModule } from './modules/chats/chats.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,8 +35,11 @@ import { SlideContentsModule } from './modules/slide-content/slide-content.modul
     GroupMembersModule,
     ProfilesModule,
     PresentationsModule,
+    PresentationSessionsModule,
     SlideContentsModule,
     SlidesModule,
+    QuestionsModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
