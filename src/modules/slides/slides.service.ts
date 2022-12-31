@@ -83,4 +83,12 @@ export class SlidesService extends BaseService<SlidesDocument> {
     }
     throw NotFoundException;
   }
+  async deleteSlidesByPresentationId(presentationId: string): Promise<any>
+  {
+    const slidesByPresentationId = await this.slideModel.find({presentation: presentationId});
+    const result = await slidesByPresentationId.forEach(slide => {
+      return this.deleteASlide(slide.id);
+    });
+    return result;
+  }
 }

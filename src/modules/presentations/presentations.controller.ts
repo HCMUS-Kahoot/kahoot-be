@@ -7,6 +7,7 @@ import { FactoryBaseController } from "../../base/factory-base.controller";
 import { PresentationsService } from "./presentations.service";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { GetCurrentUserId } from "../../common/decorators/get-current-user-id.decorator";
+import { Override } from "../../common/decorators/override.decorator";
 
 @Controller('presentations')
 @ApiTags('presentations')
@@ -33,5 +34,10 @@ export class PresentationsController extends FactoryBaseController<
     return this.presentationsService.updateOne(id, {
       name
     });
+  }
+  
+  @Override()
+  async delete(id: string, option?: any): Promise<Partial<PresentationDocument>> {
+      return await this.presentationsService.deleteAPresentation(id);
   }
 }
