@@ -76,6 +76,7 @@ export class SlidesService extends BaseService<SlidesDocument> {
         title: slide.title,
         presentation: slide.presentation,
         slideType: slide.slideType,
+        slideIndex: slide.slideIndex,
         content: this.slideServiceFactory.getService(slide.slideType.toString()).convertContent(slide.content)
       }
     })

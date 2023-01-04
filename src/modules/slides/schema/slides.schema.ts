@@ -21,6 +21,11 @@ export class Slide {
   @Prop({
     type: String,
   })
+  slideIndex: String;
+
+  @Prop({
+    type: String,
+  })
   title: String;
   
   @Prop({

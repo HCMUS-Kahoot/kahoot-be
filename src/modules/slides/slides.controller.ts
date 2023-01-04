@@ -27,7 +27,8 @@ export class SlidesController extends FactoryBaseController<
   }
   @Get('getSlidesByPresentationId/:id')
   async getSlidesByPresentationIdWith(@Param('id') presentationId: String) {
-    return await this.slidesService.getSlidesByPresentationIdPopulateContent(presentationId)
+    let slides= await this.slidesService.getSlidesByPresentationIdPopulateContent(presentationId)
+    return slides.sort((a, b) => Number(a.slideIndex) - Number(b.slideIndex))
   }
 
   @Override()
