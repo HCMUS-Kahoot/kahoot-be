@@ -14,12 +14,7 @@ export class ParagraphService {
 
   convertContent(exercise:any): Promise<any>{
     let dataItem=exercise.toObject();
-    dataItem.choices=[];
-    dataItem.data=[]
-    dataItem.detail.forEach(choiceData => {
-      dataItem.choices.push(choiceData.choiceContent)
-      dataItem.data.push({name: choiceData.choiceContent, pv: 0})
-    });
+    dataItem.paragraph = dataItem.detail[0];
     return dataItem
   }
 

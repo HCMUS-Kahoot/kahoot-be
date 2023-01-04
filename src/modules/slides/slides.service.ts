@@ -48,7 +48,7 @@ export class SlidesService extends BaseService<SlidesDocument> {
       return await this.createASlide(slide, presentationId)
     }
     else{
-      return await this.updateOne(slide._id, slide)
+      return await this.updateASlide(slide, presentationId, slide._id)
     }
   }
   async createASlide(slide, presentationId)
@@ -57,6 +57,14 @@ export class SlidesService extends BaseService<SlidesDocument> {
     const newSlide=new this.slideModel(slide)
     const newSlideContent = await this.slideServiceFactory.getService(slide.slideType).createContent(slide.content);
     newSlide.content=newSlideContent._id;
+    return await newSlide.save();
+  }
+  async updateASlide(slide, presentationId, oldSlideId) {
+    await this.deleteASlide(oldSlideId);
+    slide.presentation = presentationId;
+    const newSlide = new this.slideModel(slide)
+    const newSlideContent = await this.slideServiceFactory.getService(slide.slideType).createContent(slide.content);
+    newSlide.content = newSlideContent._id;
     return await newSlide.save();
   }
   async getSlidesByPresentationIdPopulateContent(presentationId)

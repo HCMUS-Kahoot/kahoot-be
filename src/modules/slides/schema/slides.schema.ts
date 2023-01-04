@@ -14,27 +14,23 @@ export type SlidesDocument= Slide & BaseDocument;
 export class Slide {
   @Prop({
     type: String,
-    required: true,
     enum: SlideType,
   })
   slideType: String;
 
   @Prop({
     type: String,
-    required: true,
   })
   title: String;
   
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
     ref: 'Presentation',
   })
   presentation: Presentation;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
     refPath: 'slideType',
   })
   content: String;

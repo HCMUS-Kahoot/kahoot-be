@@ -3,6 +3,11 @@ import { IsObject } from 'class-validator';
 export class CreateSlidesDto{
   @ApiProperty({
     type: String,
+  })
+  slideIndex: String;
+
+  @ApiProperty({
+    type: String,
     required: true,
   })
   slideType: String;
