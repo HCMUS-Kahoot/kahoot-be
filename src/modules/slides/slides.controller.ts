@@ -21,9 +21,13 @@ export class SlidesController extends FactoryBaseController<
   }
   @Post('createOrUpdateListOfSlides')
   async createOrUpdateListOfSlides(@Body() body) {
-    body.slideContent.forEach(async (slide) => {
-      await this.slidesService.createOrUpdateASlide(slide,body.presentationId);
-    });
+    var itemList = [];
+    for(const slide of body.slideContent)
+    {
+      const item =  await this.slidesService.createOrUpdateASlide(slide,body.presentationId);
+      itemList.push(item);
+    }
+    return itemList;
   }
   @Get('getSlidesByPresentationId/:id')
   async getSlidesByPresentationIdWith(@Param('id') presentationId: String) {

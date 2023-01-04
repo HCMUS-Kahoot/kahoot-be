@@ -61,7 +61,7 @@ export class SlidesService extends BaseService<SlidesDocument> {
   }
   async updateASlide(slide) {
     await this.slideServiceFactory.getService(slide.slideType).updateContent(slide.content._id,slide.content);    
-    return await this.updateOne(slide._id, slide);    
+    return await this.updateOne(slide._id, slide);
   }
   async getSlidesByPresentationIdPopulateContent(presentationId)
   {
