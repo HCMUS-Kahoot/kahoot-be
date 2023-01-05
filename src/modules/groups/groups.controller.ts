@@ -134,4 +134,8 @@ export class GroupsController extends FactoryBaseController<
     });
     return super.delete(id);
   }
+  @Get('edit/:groupId/:newName/:newDescription')
+  async editGroupName(@Param('groupId') groupId: string, @Param('newName') newName: string, @Param('newDescription') newDescription: string) {
+    return await this.groupsService.update(groupId, { name: newName , description: newDescription});
+  }
 }

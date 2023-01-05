@@ -6,6 +6,9 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class GroupsRepository extends BaseRepository<GroupDocument> {
+  async update(groupId: string, values: any) {
+    const group = await this.groupModel.updateOne({ _id: groupId }, values);
+  }
   constructor(
     @InjectModel(Group.name) private readonly groupModel: Model<GroupDocument>,
   ) {
