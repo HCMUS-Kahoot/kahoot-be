@@ -4,7 +4,7 @@ import { JwtAuthGuard } from './../../common/guards/jwt-auth.guard';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GroupsService } from './groups.service';
-import { Body, Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { GroupDocument } from './schema/groups.schema';
 import { ApiTags } from '@nestjs/swagger';
 import { FactoryBaseController } from 'src/base/factory-base.controller';
@@ -125,5 +125,17 @@ export class GroupsController extends FactoryBaseController<
       memberId: userId,
       role: 'member',
     })
+  }
+  @Override()
+  async delete(@Param('id') id: string) {
+    let list = await this.memberService.getItemByQuery({ groupId: id });
+    list.forEach(async (item) => {
+      await this.memberService.delete(item._id);
+    });
+    return super.delete(id);
+  }
+  @Get('edit/:groupId/:newName/:newDescription')
+  async editGroupName(@Param('groupId') groupId: string, @Param('newName') newName: string, @Param('newDescription') newDescription: string) {
+    return await this.groupsService.update(groupId, { name: newName , description: newDescription});
   }
 }
