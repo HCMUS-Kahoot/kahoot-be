@@ -27,6 +27,7 @@ export class SlidesController extends FactoryBaseController<
       const item =  await this.slidesService.createOrUpdateASlide(slide,body.presentationId);
       itemList.push(item);
     }
+    console.log("This is item list: ", itemList.length);
     return itemList;
   }
   @Get('getSlidesByPresentationId/:id')

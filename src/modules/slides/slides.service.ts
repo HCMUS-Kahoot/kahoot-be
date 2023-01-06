@@ -57,11 +57,28 @@ export class SlidesService extends BaseService<SlidesDocument> {
     const newSlide=new this.slideModel(slide)
     const newSlideContent = await this.slideServiceFactory.getService(slide.slideType).createContent(slide.content);
     newSlide.content=newSlideContent._id;
-    return await newSlide.save();
+    const createResult = await (await newSlide.save()).populate('content');
+    return {
+      _id: createResult._id,
+      title: createResult.title,
+      presentation: createResult.presentation,
+      slideType: createResult.slideType,
+      slideIndex: createResult.slideIndex,
+      content: this.slideServiceFactory.getService(createResult.slideType.toString()).convertContent(createResult.content)
+    }
   }
   async updateASlide(slide) {
     await this.slideServiceFactory.getService(slide.slideType).updateContent(slide.content._id,slide.content);    
-    return await this.updateOne(slide._id, slide);
+    await this.updateOne(slide._id, slide);
+    const createResult =  await (await this.slideModel.findById(slide._id)).populate('content');
+    return {
+      _id: createResult._id,
+      title: createResult.title,
+      presentation: createResult.presentation,
+      slideType: createResult.slideType,
+      slideIndex: createResult.slideIndex,
+      content: this.slideServiceFactory.getService(createResult.slideType.toString()).convertContent(createResult.content)
+    }
   }
   async getSlidesByPresentationIdPopulateContent(presentationId)
   {
