@@ -32,6 +32,12 @@ export class Presentation extends Base {
     default: Date.now(),
   })
   lastEdit: Date
+  
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group'
+  })
+  groupId: String
 }
 
 export const PresentationSchema = SchemaFactory.createForClass(Presentation);
