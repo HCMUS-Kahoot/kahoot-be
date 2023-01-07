@@ -58,7 +58,6 @@ export class GroupsController extends FactoryBaseController<
   @UseGuards(JwtAuthGuard)
   async getCurrentUserGroups(@GetCurrentUserId() id: string) {
     const groups = await this.memberService.getAll({ memberId: id });
-    console.log("groups", groups);
     const task = groups.map(async (group) =>
       this.groupsService.getItemById(group.groupId),
     );
@@ -70,7 +69,6 @@ export class GroupsController extends FactoryBaseController<
   @UseGuards(JwtAuthGuard)
   async getGroupThatImAdmin(@GetCurrentUserId() id: string) {
     const groups = await this.memberService.getAll({ memberId: id });
-    console.log("groups2", groups);
 
     const task = groups.map(async (group) =>
       this.groupsService.getItemById(group.groupId),
@@ -83,7 +81,6 @@ export class GroupsController extends FactoryBaseController<
   @UseGuards(JwtAuthGuard)
   async getGroupThatImCoOwner(@GetCurrentUserId() id: string) {
     const groups = await this.memberService.getAll({ memberId: id, role: 'cohost' });
-    console.log("groups that cohost", groups);
 
     const task = groups.map(async (group) =>
       this.groupsService.getItemById(group.groupId),
@@ -97,7 +94,6 @@ export class GroupsController extends FactoryBaseController<
   @UseGuards(JwtAuthGuard)
   async getGroupThatImMember(@GetCurrentUserId() id: string) {
     const groups = await this.memberService.getAll({ memberId: id, role: 'member' });
-    console.log("groups that member",groups);
     const task = groups.map(async (group) =>
       this.groupsService.getItemById(group.groupId),
     );

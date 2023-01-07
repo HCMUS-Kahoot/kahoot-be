@@ -29,6 +29,17 @@ export class PresentationsController extends FactoryBaseController<
       return result;
     });
   }
+
+  @Get('current-user-presentations-group/:groupId')
+  @UseGuards(JwtAuthGuard)
+  async getCurrentUserPresentationsGroup(@GetCurrentUserId() id: string, @Param('groupId') groupId: string)
+  {
+    const presentations = await this.presentationsService.getAll({ owner: id, groupId})
+    return Promise.all(presentations).then((result) => {
+      return result;
+    });
+  }
+
   @Post('/name/:id/:name')
   async updatePresentationName(@Param('id') id: string, @Param('name') name: string) {
     return this.presentationsService.updateOne(id, {
