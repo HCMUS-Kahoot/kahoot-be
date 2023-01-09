@@ -4,6 +4,7 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import mongoose from 'mongoose';
 import { Presentation } from '../../../modules/presentations/schema/presentations.schema';
 import { User } from '../../authentication/users/schema/users.schema';
+import { Type } from 'class-transformer';
 
 export class CreatePresentationSessionDto {
   @IsString()
@@ -17,17 +18,26 @@ export class CreatePresentationSessionDto {
   presentation: Presentation;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
-  @ApiProperty({ description: 'Start time', type: Date})
+  @ApiProperty({ description: 'Start time', type: Date })
   startTime: Date
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
-  @ApiProperty({ description: 'End time', type: Date})
+  @ApiProperty({ description: 'End time', type: Date })
   endTime: Date
 
   @IsArray()
-  @IsNotEmpty()
-  @ApiProperty({description: 'List user join', type: Array, default: false})
+  @ApiProperty({ description: 'List user join', type: Array, default: false })
   joinUser: User[];
+
+  @IsArray()
+  @ApiProperty({ description: 'List chat', type: Array, default: false })
+  chats: any[];
+
+  @IsArray()
+  @ApiProperty({ description: 'List question', type: Array, default: false })
+  questions: any[];
 }
