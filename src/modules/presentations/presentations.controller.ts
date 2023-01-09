@@ -8,6 +8,8 @@ import { PresentationsService } from "./presentations.service";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { GetCurrentUserId } from "../../common/decorators/get-current-user-id.decorator";
 import { Override } from "../../common/decorators/override.decorator";
+import { Body, Delete } from "@nestjs/common/decorators";
+import { UsersService } from "../authentication/users/users.service";
 
 @Controller('presentations')
 @ApiTags('presentations')
@@ -18,6 +20,7 @@ export class PresentationsController extends FactoryBaseController<
 >(CreatePresentationDto, UpdatePresentationDto) {
   constructor(
     private readonly presentationsService: PresentationsService,
+    private readonly usersService: UsersService,
   ) {
     super(presentationsService);
   }
@@ -45,6 +48,20 @@ export class PresentationsController extends FactoryBaseController<
     return this.presentationsService.updateOne(id, {
       name
     });
+  }
+  @Post('addCollaborator')
+  async addCollaborator(@Body() body: any)
+  {
+    const {ownerId, presentationId, collaboratorEmail} = body;
+    const newCollaborator = await this.usersService.getUserByEmail(collaboratorEmail);
+    return await this.presentationsService.addNewCollaborator(ownerId, presentationId, newCollaborator);
+  }
+  @Post('deleteCollaborator')
+  async deleteCollaborator(@Body() body: any)
+  {
+    const {ownerId, presentationId, collaboratorEmail} = body;
+    const deleteCollaborator = await this.usersService.getUserByEmail(collaboratorEmail);
+    return await this.presentationsService.deleteCollaborator(ownerId, presentationId, deleteCollaborator);
   }
   
   @Override()
