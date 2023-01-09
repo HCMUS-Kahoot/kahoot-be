@@ -35,12 +35,11 @@ export class PresentationsService extends BaseService<PresentationDocument> {
     {
       if(!presentation.collaborators)
       {
-        console.log("This is triggered when the collaborators is empty");
         presentation.collaborators=new Array<User>();
       }
       if(presentation.collaborators.includes(newCollaborator)) return presentation.collaborators;
-      presentation.collaborators.push(newCollaborator);
-      return await (await presentation.save()).collaborators;
+      await this.presentationModel.findByIdAndUpdate(presentationId,{collaborators: [...presentation.collaborators, newCollaborator]})
+      return await (await this.presentationModel.findById(presentationId)).collaborators;
     }
     throw NotFoundException;
   }
