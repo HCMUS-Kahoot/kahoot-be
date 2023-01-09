@@ -8,7 +8,7 @@ import { PresentationsService } from "./presentations.service";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { GetCurrentUserId } from "../../common/decorators/get-current-user-id.decorator";
 import { Override } from "../../common/decorators/override.decorator";
-import { Body } from "@nestjs/common/decorators";
+import { Body, Delete } from "@nestjs/common/decorators";
 import { UsersService } from "../authentication/users/users.service";
 
 @Controller('presentations')
@@ -55,6 +55,13 @@ export class PresentationsController extends FactoryBaseController<
     const {ownerId, presentationId, collaboratorEmail} = body;
     const newCollaborator = await this.usersService.getUserByEmail(collaboratorEmail);
     return await this.presentationsService.addNewCollaborator(ownerId, presentationId, newCollaborator);
+  }
+  @Post('deleteCollaborator')
+  async deleteCollaborator(@Body() body: any)
+  {
+    const {ownerId, presentationId, collaboratorEmail} = body;
+    const deleteCollaborator = await this.usersService.getUserByEmail(collaboratorEmail);
+    return await this.presentationsService.deleteCollaborator(ownerId, presentationId, deleteCollaborator);
   }
   
   @Override()

@@ -43,4 +43,14 @@ export class PresentationsService extends BaseService<PresentationDocument> {
     }
     throw NotFoundException;
   }
+  async deleteCollaborator(ownerId: string, presentationId: string, deleteCollaborator: User): Promise<User[]>
+  {
+    let presentation = await this.presentationModel.findOne({_id: presentationId, owner: ownerId});
+    if(presentation && deleteCollaborator)
+    {
+      await this.presentationModel.findByIdAndUpdate(presentationId,{collaborators: presentation.collaborators.filter(user => user.email !== deleteCollaborator.email)})
+      return await (await this.presentationModel.findById(presentationId)).collaborators;
+    }
+    throw NotFoundException;
+  }
 }
