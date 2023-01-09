@@ -21,6 +21,12 @@ export class PresentationSessions extends Base {
 
   @Prop({ required: true, type: Array, ref: 'User' })
   joinUser: User[]
+
+  @Prop({ type: Array })
+  chats: any[]
+
+  @Prop({ type: Array })
+  questions: any[]
 }
 
 export const PresentationSessionsSchema = SchemaFactory.createForClass(PresentationSessions);
