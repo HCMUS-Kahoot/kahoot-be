@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Base, BaseDocument } from '../../../base/base.schema';
-import { User } from '../../authentication/users/schema/users.schema';
+import { User, UserSchema } from '../../authentication/users/schema/users.schema';
 
 export type PresentationDocument= Presentation & BaseDocument;
 
@@ -38,6 +38,11 @@ export class Presentation extends Base {
     ref: 'Group'
   })
   groupId: String
+
+  @Prop({
+    type: Array,
+  })
+  collaborators: User[]
 }
 
 export const PresentationSchema = SchemaFactory.createForClass(Presentation);
