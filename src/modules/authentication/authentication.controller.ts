@@ -81,7 +81,7 @@ export class AuthController {
     return res.status(500).send("Can not login with gooogle")
   }
 
-  @Get('sendEmail')
+  @Get('sendActivateEmail')
   @UseGuards(JwtAuthGuard)
   async sendActivateEmail(@Request() req: any):Promise<any>
   {
