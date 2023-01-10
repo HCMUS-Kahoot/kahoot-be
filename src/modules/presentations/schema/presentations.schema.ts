@@ -17,7 +17,6 @@ export class Presentation extends Base {
   @Prop({
     type: String,
     required: true,
-    unique: true,
   })
   name: String
 
