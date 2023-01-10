@@ -74,7 +74,7 @@ export class GroupMembersController extends FactoryBaseController<
     @Param('groupId') groupId: string,
     @Param('memberEmail') memberEmail: string,
   ) {
-    
+
     const member = await this.userService.getUserByEmail(memberEmail);
     const targetUser = await this.groupMembersService.getItemByQuery({
       memberId: member._id,
@@ -82,6 +82,21 @@ export class GroupMembersController extends FactoryBaseController<
     });
     if (targetUser.length > 0) {
       return await this.groupMembersService.deleteOne(targetUser[0]._id);
+    }
+    throw new NotFoundException('User not found');
+  }
+
+  @Get('/:groupId/:memberId')
+  async getGroupMember(
+    @Param('groupId') groupId: string,
+    @Param('memberId') memberId: string,
+  ) {
+    const targetUser = await this.groupMembersService.getItemByQuery({
+      memberId: memberId,
+      groupId: groupId,
+    });
+    if (targetUser.length > 0) {
+      return targetUser[0];
     }
     throw new NotFoundException('User not found');
   }
