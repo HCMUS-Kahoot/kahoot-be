@@ -66,12 +66,10 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@Response() res: any, @Request() req: any, @Headers() header: any): Promise<any>
-  {
+  async googleLogin(@Response() res: any, @Request() req: any, @Headers() header: any): Promise<any> {
     const clientSide = header.origin;
-    const authInfo =await this.authservice.loginWithThirdService(req);
-    if(authInfo)
-    {
+    const authInfo = await this.authservice.loginWithThirdService(req);
+    if (authInfo) {
       res.set({
         'access-token': authInfo.access_token,
         'refresh-token': authInfo.refresh_token
@@ -83,26 +81,32 @@ export class AuthController {
 
   @Get('sendActivateEmail')
   @UseGuards(JwtAuthGuard)
-  async sendActivateEmail(@Request() req: any):Promise<any>
-  {
-    const accessToken=this.authservice.getTokenFromRequestHeader(req);
+  async sendActivateEmail(@Request() req: any): Promise<any> {
+    const accessToken = this.authservice.getTokenFromRequestHeader(req);
     const payload = this.authservice.tokenToPayload(accessToken);
     return await this.authservice.sentActivateAccountEmail(payload);
   }
 
+  @Post('sendInviteGroupEmail')
+  @UseGuards(JwtAuthGuard)
+  async sendInviteGroupEmail(@Request() req: any): Promise<any> {
+    const accessToken = this.authservice.getTokenFromRequestHeader(req);
+    const payload = this.authservice.tokenToPayload(accessToken);
+    const { email, invitationLink } = req.body;
+    return await this.authservice.sentInvitationGroupEmail(payload, email, invitationLink);
+  }
+
   @Get('activateAccount')
-  async activateAccount(@Request() req: any, @Query() query): Promise<any>
-  {
+  async activateAccount(@Request() req: any, @Query() query): Promise<any> {
     const result = await this.authservice.activateUser(query);
-    if(result)
-    {
+    if (result) {
       return "Your account has been activated!";
     }
     else return result;
   }
   @Get('/current-user')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@GetCurrentUserId() userId){
+  async getCurrentUser(@GetCurrentUserId() userId) {
     return await this.authservice.getCurrentUser(userId);
   }
 }

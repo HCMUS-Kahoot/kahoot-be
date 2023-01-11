@@ -20,7 +20,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
   async validateUser(email: string, password: string): Promise<any> {
     return await this.usersService.validateUserPassword(email, password);
   }
@@ -140,45 +140,56 @@ export class AuthService {
       refresh_token: (await this.usersService.getUserByEmail(req.user.email)).refreshToken,
     }
   }
-  async sentActivateAccountEmail(userInfo): Promise<any>{
-    const email=userInfo.email;
+  async sentActivateAccountEmail(userInfo): Promise<any> {
+    const email = userInfo.email;
     const activateCode = randomstringGenerator.generate();
-    const setResult = await this.usersService.setActivatedCode(userInfo.sub,activateCode);
+    const setResult = await this.usersService.setActivatedCode(userInfo.sub, activateCode);
     const domainName = this.config.get<string>(DOMAINNAME)
-    if(setResult)
-    {
-      const senderApiKey=this.config.get<string>(API_SEND_MAIL_KEY)
+    if (setResult) {
+      const senderApiKey = this.config.get<string>(API_SEND_MAIL_KEY)
       sendGrid.setApiKey(senderApiKey)
       const message = {
         to: email,
         from: 'darkflamekhtn@gmail.com',
         subject: 'Activate your account now!',
-        html:`${domainName}api/auth/activateAccount?userId=${userInfo.sub}&activateCode=${activateCode}`
+        html: `${domainName}api/auth/activateAccount?userId=${userInfo.sub}&activateCode=${activateCode}`
       }
       sendGrid.send(message)
     }
-    else{
+    else {
       throw new Error("Fail to set activate code to user");
-    }    
+    }
+  }
+  async sentInvitationGroupEmail(userInfo, email, invitationLink): Promise<any> {
+    try {
+      const senderApiKey = this.config.get<string>(API_SEND_MAIL_KEY)
+      sendGrid.setApiKey(senderApiKey)
+      const message = {
+        to: email,
+        from: 'darkflamekhtn@gmail.com',
+        subject: `${userInfo.email} invited you to join a group`,
+        html: `${invitationLink}`
+      }
+      sendGrid.send(message)
+    } catch (error) {
+      throw new Error("Fail to set activate code to user");
+    }
+
   }
 
   async activateUser(query: any): Promise<any> {
-    if(!query.userId||!query.activateCode)
-    {
+    if (!query.userId || !query.activateCode) {
       throw new BadRequestException("Can not read userId or activateCode from query params which is required field");
     }
-    const userFindById= await this.usersService.getItemById(query.userId);
-    if(!userFindById)
-    {
+    const userFindById = await this.usersService.getItemById(query.userId);
+    if (!userFindById) {
       throw new BadRequestException("Can not find user with given userId taken from query params")
     }
-    if(userFindById.activateCode!==query.activateCode)
-    {
+    if (userFindById.activateCode !== query.activateCode) {
       return false;
     }
-    const activateResult= await this.usersService.updateActivateStatus(query.userId, true);
-    if(activateResult)
-    {
+    const activateResult = await this.usersService.updateActivateStatus(query.userId, true);
+    if (activateResult) {
       return true;
     }
     return false;
