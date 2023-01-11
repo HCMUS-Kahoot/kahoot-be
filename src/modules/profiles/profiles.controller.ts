@@ -24,7 +24,8 @@ export class ProfilesController extends FactoryBaseController<
   }
   @Post('user/:id')
   async createOrUpdateProfileByUserId(@Param('id') id: string, @Body() body: CreateProfileDto) {
-    const profile = await this.profilesService.getAll({ user: id })[0];
+    const profiles = await this.profilesService.getAll({ user: id });
+    const profile = profiles[0];
     if (profile) {
       return this.profilesService.updateOne(profile._id, {
         ...body,
